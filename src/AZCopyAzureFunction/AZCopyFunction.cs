@@ -11,7 +11,7 @@ namespace AZCopyAzureFunction
     public static class AZCopyFunction
     {
         [FunctionName("RunAZCopyBackup")]
-        public static void Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
+        public static void Run([TimerTrigger("0 0 * * * *")]TimerInfo myTimer, ILogger log, ExecutionContext context)
         {
             var config = new ConfigurationBuilder()
                 .SetBasePath(context.FunctionAppDirectory)
