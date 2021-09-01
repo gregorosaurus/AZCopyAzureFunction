@@ -24,7 +24,7 @@ namespace AZCopyAzureFunction
                 log.LogInformation($"Syncing container {containerName}");
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 process.StartInfo.FileName = Path.Combine(context.FunctionAppDirectory, "azcopy.exe");
-                process.StartInfo.Arguments = $"sync \"{config["Source"]}/{containerName}{config["SourceSASToken"]}\" \"{config["Destination"]}{containerName}{config["DestinationSASToken"]}\" ";
+                process.StartInfo.Arguments = $"sync \"{config["Source"]}/{containerName}{config["SourceSASToken"]}\" \"{config["Destination"]}/{containerName}{config["DestinationSASToken"]}\" ";
                 // Keep this False, is MUST !
                 process.StartInfo.UseShellExecute = false;
                 // Enabling Reading Application's Outputs
