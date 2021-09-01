@@ -19,7 +19,14 @@ namespace AZCopyAzureFunction
                 .AddEnvironmentVariables()
                 .Build();
 
-            foreach (string containerName in config["ContainersToSync"].Split(',').Select(x => x.Trim()))
+            string containersToSync = config["ContainersToSync"];
+            if(string.IsNullOrEmpty(containersToSync))
+            {
+                log.LogError("No containers specified to sync.");
+                return;
+            }
+
+            foreach (string containerName in containersToSync.Split(',').Select(x => x.Trim()))
             {
                 log.LogInformation($"Syncing container {containerName}");
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -29,8 +36,10 @@ namespace AZCopyAzureFunction
                 process.StartInfo.UseShellExecute = false;
                 // Enabling Reading Application's Outputs
                 process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
                 process.Start();
                 string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
                 log.LogInformation(output);
                 process.WaitForExit();
 
@@ -38,6 +47,7 @@ namespace AZCopyAzureFunction
                 if (process.ExitCode != 0)
                 {
                     log.LogWarning($"Invalid exit code: {process.ExitCode}");
+                    log.LogWarning(error);
                 }
             }
         }
