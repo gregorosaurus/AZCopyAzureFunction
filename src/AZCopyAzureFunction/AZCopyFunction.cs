@@ -32,9 +32,7 @@ namespace AZCopyAzureFunction
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 process.StartInfo.FileName = Path.Combine(context.FunctionAppDirectory, "azcopy.exe");
                 process.StartInfo.Arguments = $"sync \"{config["Source"]}/{containerName}{config["SourceSASToken"]}\" \"{config["Destination"]}/{containerName}{config["DestinationSASToken"]}\" ";
-                // Keep this False, is MUST !
-                process.StartInfo.UseShellExecute = false;
-                // Enabling Reading Application's Outputs
+                process.StartInfo.UseShellExecute = false; 
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 process.Start();
