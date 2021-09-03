@@ -33,7 +33,8 @@
         "hostingPlanName": "[concat(parameters('appName'),'_asp')]",
         "applicationInsightsName": "[parameters('appName')]",
         "storageAccountName": "[concat(uniquestring(resourceGroup().id),'azfunc')]",
-        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+        "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+        "zipUrl": "https://github.com/gregorosaurus/AZCopyAzureFunction/raw/main/build/package.zip"
     },
     "resources": [
         {
@@ -91,6 +92,20 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ],
+            "resources": [
+                {
+                    "name": "MSDeploy",
+                    "type": "extensions",
+                    "apiVersion": "2021-01-15",
+                    "dependsOn": [
+                      "[resourceId('Microsoft.Web/Sites', variables('functionAppName'))]"
+                    ],
+                    "properties": {
+                        "packageUri": "[variables('zipUrl')]"
+                    },
+                    "condition": "[not(equals(variables('zipUrl'), ''))]"
+                }
             ],
             "kind": "functionapp",
             "properties": {
